@@ -5,18 +5,33 @@ class SessionMemory:
     def __init__(self):
         self.moves = []
         self.bigram_transitions = defaultdict(lambda: defaultdict(int))
+        self.trigram_transitions = defaultdict(lambda: defaultdict(int))
         self.move_counts = defaultdict(int)
+        self.recency_weights = []
     
     def add_move(self, move: int):
+        # Track bigrams (last 2 moves)
         if len(self.moves) >= 2:
             prev_two = (self.moves[-2], self.moves[-1])
             self.bigram_transitions[prev_two][move] += 1
+        
+        # Track trigrams (last 3 moves)
+        if len(self.moves) >= 3:
+            prev_three = (self.moves[-3], self.moves[-2], self.moves[-1])
+            self.trigram_transitions[prev_three][move] += 1
+        
         self.moves.append(move)
         self.move_counts[move] += 1
+        self.recency_weights.append(1.0)
     
     def get_last_two_moves(self) -> Optional[Tuple[int, int]]:
         if len(self.moves) >= 2:
             return (self.moves[-2], self.moves[-1])
+        return None
+    
+    def get_last_three_moves(self) -> Optional[Tuple[int, int, int]]:
+        if len(self.moves) >= 3:
+            return (self.moves[-3], self.moves[-2], self.moves[-1])
         return None
     
     def get_move_sequence(self) -> List[int]:
@@ -24,6 +39,9 @@ class SessionMemory:
     
     def get_bigram_transitions(self) -> Dict:
         return dict(self.bigram_transitions)
+    
+    def get_trigram_transitions(self) -> Dict:
+        return dict(self.trigram_transitions)
     
     def get_move_counts(self) -> Dict:
         return dict(self.move_counts)

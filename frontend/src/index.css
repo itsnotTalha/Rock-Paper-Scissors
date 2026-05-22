@@ -29,6 +29,48 @@ body {
   }
 }
 
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.6), inset 0 0 20px rgba(0, 255, 65, 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(0, 255, 65, 0.8), inset 0 0 20px rgba(0, 255, 65, 0.3);
+  }
+}
+
+@keyframes glow-pulse-cyan {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6), inset 0 0 20px rgba(0, 255, 255, 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.8), inset 0 0 20px rgba(0, 255, 255, 0.3);
+  }
+}
+
+@keyframes glow-pulse-pink {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(255, 0, 110, 0.6), inset 0 0 20px rgba(255, 0, 110, 0.2);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(255, 0, 110, 0.8), inset 0 0 20px rgba(255, 0, 110, 0.3);
+  }
+}
+
+@keyframes arcade-click {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes title-flicker {
+  0%, 18%, 22%, 25%, 54%, 56%, 100% {
+    text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
+  }
+  19%, 23%, 55% {
+    text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+  }
+}
+
 html::before {
   content: '';
   position: fixed;
@@ -46,4 +88,25 @@ html::before {
   pointer-events: none;
   animation: scanlines 8s linear infinite;
   z-index: 999999;
+}
+
+.glow-button-neon {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.glow-button-cyan {
+  animation: glow-pulse-cyan 2s ease-in-out infinite;
+}
+
+.glow-button-pink {
+  animation: glow-pulse-pink 2s ease-in-out infinite;
+}
+
+.arcade-title {
+  animation: title-flicker 3s ease-in-out infinite;
+  letter-spacing: 3px;
+}
+
+.arcade-click {
+  animation: arcade-click 0.1s ease-out;
 }
