@@ -27,6 +27,10 @@ def play(request: PlayRequest):
     player_move = validate_move(request.player_move)
     session_memory.add_move(player_move)
     
+    # Train ML model after 15+ moves (need good data to start)
+    if session_memory.total_moves() >= 15 and session_memory.total_moves() % 3 == 0:
+        predictor.train()
+    
     predicted_move, ai_move, confidence = predictor.predict_and_counter()
     result = get_result(player_move, ai_move)
     
