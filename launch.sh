@@ -22,7 +22,7 @@ NC='\033[0m' # No Color
 cleanup() {
     echo ""
     echo -e "${YELLOW}Shutting down servers...${NC}"
-    kill $BACKEND_PID $FRONTEND_PID 2>/dev/null || true
+    kill ${BACKEND_PID:-} ${FRONTEND_PID:-} 2>/dev/null || true
     echo -e "${YELLOW}Goodbye!${NC}"
 }
 
@@ -41,7 +41,7 @@ source venv/bin/activate
 
 if ! python3 -c "import fastapi" 2>/dev/null; then
     echo -e "${YELLOW}Installing dependencies...${NC}"
-    pip install -r requirements.txt > /dev/null 2>&1
+    pip install -r requirements.txt
 fi
 
 python3 main.py > /tmp/backend.log 2>&1 &
@@ -60,15 +60,20 @@ fi
 echo -e "${BLUE}[2/2] Starting Frontend (Vite)...${NC}"
 cd "$PROJECT_DIR/frontend"
 
-if [ ! -d "node_modules" ]; then
-    echo -e "${YELLOW}Installing npm dependencies...${NC}"
-    npm install > /dev/null 2>&1
+if [ ! -x "node_modules/.bin/vite" ]; then
+    echo -e "${YELLOW}Installing npm dependencies for this system...${NC}"
+    npm ci
 fi
 
-npm run dev > /tmp/frontend.log 2>&1 &
+npm run dev -- --strictPort > /tmp/frontend.log 2>&1 &
 FRONTEND_PID=$!
-echo -e "${GREEN}✓ Frontend started (PID: $FRONTEND_PID)${NC}"
 sleep 3
+if ! kill -0 "$FRONTEND_PID" 2>/dev/null; then
+    echo -e "${YELLOW}Frontend failed to start. Logs:${NC}"
+    cat /tmp/frontend.log
+    exit 1
+fi
+echo -e "${GREEN}✓ Frontend started (PID: $FRONTEND_PID)${NC}"
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"

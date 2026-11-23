@@ -16,7 +16,7 @@ The launcher will:
 1. Create virtual environments if needed
 2. Install dependencies automatically
 3. Start both backend and frontend servers
-4. Open the game in your browser
+4. Print the game URL to open in your browser
 
 **URLs:**
 - Frontend: http://localhost:5173
